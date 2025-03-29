@@ -1,7 +1,6 @@
 using Il2Cpp;
 using Il2CppPantheonPersist;
 using Il2CppTMPro;
-using MelonLoader;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -24,6 +23,7 @@ public class UIRightClickChatMenu : MonoBehaviour
     private Button _whisperButton;
     private Button _whoButton;
     private Button _groupButton;
+    private Button _guildButton;
     private Button _friendButton;
     private Button _ignoreButton;
     private TextMeshProUGUI _playerNameButtonText;
@@ -66,8 +66,9 @@ public class UIRightClickChatMenu : MonoBehaviour
         _whisperButton = CloneButton(cancelButton, layout, 1, SetupWhisper, "Whisper");
         _whoButton = CloneButton(cancelButton, layout, 2, () => SendCommand("who"), "Who");
         _groupButton = CloneButton(cancelButton, layout, 3, () => SendCommand("invite"), "Invite to Group");
-        _friendButton = CloneButton(cancelButton, layout, 4, () => SendCommand("friend"), "Friend");
-        _ignoreButton = CloneButton(cancelButton, layout, 5, () => SendCommand("ignore"), "Ignore");
+        _guildButton = CloneButton(cancelButton, layout, 4, () => SendCommand("guildinvite"), "Invite to Guild");
+        _friendButton = CloneButton(cancelButton, layout, 5, () => SendCommand("friend"), "Friend");
+        _ignoreButton = CloneButton(cancelButton, layout, 6, () => SendCommand("ignore"), "Ignore");
     }
 
     private Button CloneButton(GameObject buttonToClone, Transform parent, int siblingIndex, Action onClick, string labelText)
@@ -123,6 +124,12 @@ public class UIRightClickChatMenu : MonoBehaviour
     
     public void Show(string targetName, Vector2 mousePos)
     {
+        var localPlayer = EntityPlayerGameObject.LocalPlayer.Cast<EntityPlayerGameObject>();
+        // This is a hack for getting guild name... player's info does not have the guild fields populated.
+        // I don't know if there are other titles you can get in the game, I've yet to see one. This may break in the future
+        var isInGuild = !string.IsNullOrWhiteSpace(localPlayer.info.Title);
+        _guildButton.gameObject.SetActive(Globals.ShowGuildInvite && isInGuild);
+        
         menuPanel.Show();
 
         SetPosition(mousePos);
