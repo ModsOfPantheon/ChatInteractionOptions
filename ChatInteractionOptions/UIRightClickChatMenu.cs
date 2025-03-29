@@ -89,29 +89,9 @@ public class UIRightClickChatMenu : MonoBehaviour
     // set the position of the underlying rect...
     private void SetPosition(Vector2 mousePos)
     {
-        var x = mousePos.x;
-        var y = mousePos.y;
-
-        if (x < 0)
-        {
-            x = 0;
-        }
-
-        if (x > Screen.width - backgroundRect.sizeDelta.x)
-        {
-            x = Screen.width - backgroundRect.sizeDelta.x;
-        }
-
-        if (y < 0)
-        {
-            y = 0;
-        }
-
-        if (y > Screen.height - backgroundRect.sizeDelta.y)
-        {
-            y = Screen.height - backgroundRect.sizeDelta.y;
-        }
-
+        var x = Math.Clamp(mousePos.x, 0, Screen.width - backgroundRect.sizeDelta.x);
+        var y = Math.Clamp(mousePos.y, 0, Screen.height - backgroundRect.sizeDelta.y);
+        
         backgroundRect.transform.position = new Vector2(x, y);
     }
 
